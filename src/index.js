@@ -1,21 +1,21 @@
 const express = require('express')
 const app = express()
-const ipn = require('./ipn')
-const ask = require('./ask')
-const pageIndex = require('./pageIndex')
+const payexpress = require('./payexpress')
 const path = require('path')
 
 // application config
 app.use(express.static(path.resolve(__dirname, '../public')))
-app.use(express.json())
+app.use(express.json({ urlencoded: true }))
+app.use(express.urlencoded({ extended: true }))
 app.set('views', path.resolve(__dirname, '../views'))
 app.set('view engine', 'pug')
 
 // payment with redirect
 // payment without redirect
-app.post('/ipn', ipn)
-app.post('/ask', ask)
-app.get('/', pageIndex)
+app.use('/payexpress', payexpress)
+app.get('/', function (request, response, next) {
+  response.render('page_index')
+})
 
 
 // error middleware as last fallback
